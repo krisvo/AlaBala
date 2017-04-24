@@ -113,6 +113,35 @@ module.exports = {
     logout: (req, res) => {
         req.logOut();
         res.redirect('/');
+    },
+
+    detailsGet: (req,res)=> {
+            res.render('user/details');
+        },
+    detailsPost:(req,res) =>{
+        let image= req.files.image;
+        if (image){
+            let filename = image.name;
+            image.mv(`./public/images/${filename}`,err =>{
+                if(err){
+                    console.log(err.message);
+                }
+            });
+        }
+
+        let detailsArgs = req.body;
+
+        let errorMsg = '';
+
+        if (!req.isAuthenticated()) {
+            errorMsg = 'You should be logged!';
+        }
+
+        detailsArgs.imagePath = `/images/${image.name}`;
+
+
+
+        res.redirect('/')
     }
 
 };
