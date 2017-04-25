@@ -35,8 +35,6 @@ module.exports = {
                 Role.findOne({name: 'User'}).then(role => {
                     roles.push(role.id);
 
-                    userObject.roles = roles;
-
                     let userObject = {
                         email: registerArgs.email,
                         passwordHash: passwordHash,
