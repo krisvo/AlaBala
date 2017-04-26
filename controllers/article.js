@@ -3,6 +3,8 @@
  */
 
 const Article = require('mongoose').model('Article');
+const Tag = require('mongoose').model('Tag');
+const initializeTags = require('./../models/Tag');
 
 module.exports = {
     createGet: (req, res) => {
@@ -29,31 +31,29 @@ module.exports = {
         }
 
         articleArgs.author = req.user.id;
+        articleArgs.tags = [];
         Article.create(articleArgs).then(article => {
-            req.user.articles.push(article.id);
-            req.user.save(err => {
-                if (err) {
-                    res.redirect('/', {error: err.message});
-                }
-                else {
-                    res.redirect('/');
-                }
-            });
-        })
+            let tagNames = articleArgs.tagNames.split(/\s+|,/).filter(tag => {return tag});
+            initializeTags(tagNames, artile.id);
+
+            article.prepareInsert();
+            res.redirect('/');
+        });
+
     },
 
     details: (req, res) => {
         let id = req.params.id;
 
         Article.findById(id).populate('author').then(article => {
-            if (!req.user){
+            if (!req.user) {
                 res.render('article/details', {article: article, isUserAuthorized: false});
                 return;
             }
 
             req.user.isInRole('Admin').then(isAdmin => {
                 let isUserAuthorized = isAdmin || req.user.isAuthor(article);
-                res.render ('article/details', {article:article, isUserAuthorized:isUserAuthorized});
+                res.render('article/details', {article: article, isUserAuthorized: isUserAuthorized});
             });
 //            res.render('article/details', article)
         });
@@ -62,21 +62,21 @@ module.exports = {
     editGet: (req, res) => {
         let id = req.params.id;
 
-        if(!req.isAuthenticated()){
-            let returnUrl =`/article/edit/${id}`;
+        if (!req.isAuthenticated()) {
+            let returnUrl = `/article/edit/${id}`;
             req.session.returnUrl = returnUrl;
 
             res.redirect('/user/login');
             return;
         }
 
-        Article.findById(id).then(article => {
-            req.user.isInRole('Admin').then (isAdmin => {
-                if (!isAdmin && !req.user.isAuthor(article)){
+        Article.findById(id).populate('tags').then(article => {
+            req.user.isInRole('Admin').then(isAdmin => {
+                if (!isAdmin && !req.user.isAuthor(article)) {
                     res.redirect('/');
                     return;
                 }
-
+                article.tagNames = article.tags.map(tag => {return tag.name});
                 res.render('article/edit', article);
             });
         });
@@ -103,12 +103,36 @@ module.exports = {
                     res.redirect(`/article/details/${id}`);
                 })
         }
+
+        Article.findById(id).populate('category tags').then(article => {
+            if (article.category.id !==articleArgs.category){
+                article.category.articles.remove(article.id);
+                article.category.save();
+            }
+
+            article.category = articleArgs.category;
+            article.title = articleArgs.title;
+            article.content = articleArgs.content;
+
+            let newTagNames = articleArgs.tags.split(/\s+|,/).filter(tag => {return tag});
+
+            let oldTags = article.tags.filter(tag => {
+                return newTagNames.indexOf(tag.name) === -1;
+            });
+
+            for (let tag of oldTags){
+                tag.deleteArticle(article.id);
+                article.deleteTag(tag.id);
+            }
+
+            initializeTags(newTagNames, article.id);
+        })
     },
 
     deleteGet: (req, res) => {
         let id = req.params.id;
 
-        if(!req.isAuthenticated()){
+        if (!req.isAuthenticated()) {
             let returnUrl = `/article/delete/${id}`;
             req.session.returnUrl = returnUrl;
 
@@ -116,15 +140,16 @@ module.exports = {
             return;
         }
 
-        Article.findById(id).then (article => {
+        Article.findById(id).populate('category tags').then(article => {
             req.user.isInRole('Admin').then(isAdmin => {
                 if (!isAdmin && !req.user.isAuthor(article)) {
                     res.redirect('/');
                     return;
                 }
-                res.render ('article/delete', article)
+
+                article.tagNames = article.tags.map(tag => {return tag.name});
+                res.render('article/delete', article)
             });
-//            res.render ('article/delete', article)
         });
     },
 
@@ -135,9 +160,9 @@ module.exports = {
                 let author = article.author;
                 let index = author.articles.indexOf(article.id);
 
-                if (index<0){
+                if (index < 0) {
                     let errorMsg = 'Article was not found for that author!';
-                    res.render('article/delete', {error:errorMsg})
+                    res.render('article/delete', {error: errorMsg})
                 }
                 else {
                     let count = 1;
