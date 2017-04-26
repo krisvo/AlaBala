@@ -3,6 +3,8 @@
  */
 
 const Article = require('mongoose').model('Article');
+const Comment = require('mongoose').model('Comment');
+const User = require('mongoose').model('User');
 const Tag = require('mongoose').model('Tag');
 const initializeTags = require('./../models/Tag');
 
@@ -30,7 +32,23 @@ module.exports = {
             return;
         }
 
+        let image = req.files.image;
+
+        if (image) {
+            let filename = image.name;
+
+            image.mv(`./public/images/${filename}`, err=> {
+                if (err){
+                    console.log(err.message);
+                }
+
+            });
+        }
+
         articleArgs.author = req.user.id;
+
+        articleArgs.imagePath = `/images/${image.name}`;
+
         articleArgs.tags = [];
         Article.create(articleArgs).then(article => {
             let tagNames = articleArgs.tagNames.split(/\s+|,/).filter(tag => {return tag});
@@ -45,7 +63,8 @@ module.exports = {
     details: (req, res) => {
         let id = req.params.id;
 
-        Article.findById(id).populate('author').then(article => {
+        Article.findById(id).populate('author')
+            .populate({path: 'comments', model: 'Comment', populate: {path: 'author', model: 'User'}}).then(article => {
             if (!req.user) {
                 res.render('article/details', {article: article, isUserAuthorized: false});
                 return;

@@ -4,7 +4,7 @@
 const userController = require('./../controllers/user');
 const homeController = require('./../controllers/home');
 const articleController = require('./../controllers/article');
-const tagController = require('./../controllers/tag');
+const commentController = require('./../controllers/comment');
 
 module.exports = (app) => {
     app.get('/', homeController.index);
@@ -15,10 +15,12 @@ module.exports = (app) => {
     app.get('/user/login', userController.loginGet);
     app.post('/user/login', userController.loginPost);
 
-    app.get('/user/details',userController.detailsGet);
-    app.post('/user/details',userController.detailsPost);
+    app.get('/user/profile',userController.detailsGet);
+    app.post('/user/profile',userController.detailsPost);
 
     app.get('/user/logout', userController.logout);
+
+
 
     app.get('/article/create', articleController.createGet);
     app.post('/article/create', articleController.createPost);
@@ -31,10 +33,6 @@ module.exports = (app) => {
     app.get ('/article/delete/:id', articleController.deleteGet);
     app.post('/article/delete/:id', articleController.deletePost);
 
-    app.get('/article/create', tagController.createGet);
-    app.post('/article/create', tagController.createPost);
-
-    app.get('/article/edit/:id', tagController.createGet);
-    app.post('/article/edit/:id', tagController.createPost);
-
+    app.post('/article/comment/:id', commentController.commentPost);
+    app.get('/article/comment/delete/:id', commentController.removeCommentGet)
 };

@@ -1,12 +1,12 @@
-<div class="container body-content">
-    <div class="row">
-        <div class="col-md-4">
+<div class="container body-content span=8 offset=2">
+    <div class="well">
+        <div class="col-md-1" style="width: 150px; height: 150px; border: 0.1px solid black">
             <h5>Profile picture</h5>
             <form>
                 <div class="box">
-                    <img scr="{{imagePath}}"></img>
+                    <img src="{{imagePath}}">
                 </div>
-                </br>
+
                 <input type="file" class="form-control" enctype="multipart/form-data" id="profilPicture" placeholder="Profile picture" name="profilePicture" >
 
             </form>
@@ -17,17 +17,28 @@
             <p> E-mail:{{user.email}}</p>
         </div>
         <div class="col-md-4">
-            <p>Select your theme:
+            <p>Select your theme: </p>
             <div class="col-md-8">
             <div class="boxTheme"></div>
             <div class="boxTheme"></div>
             <div class="boxTheme"></div>
             <div class="boxTheme"></div>
             </div>
-            </p>
-        </div>
+
+
         <div class="col-md-12">
             <h4> Your articles</h4>
+
+        {{#each article.comments}}
+
+            <blockquote>
+                <header>
+                    <h2>{{article.title}}</h2>
+                </header>
+                <p>{{article.content}}</p>
+                <footer>Created on <cite title="Source Title">{{article.date}}</cite></footer>
+            </blockquote>
+
             <article>
                 <header>
                     <h2>{{article.title}}</h2>
@@ -36,6 +47,26 @@
                 <p>
                     {{article.content}}
                 </p>
+        {{/each}}
+
+                <div id="comments">
+                    {{#each article.comments}}
+                        <div class="col-md-12">
+                            <p style = "text-align: start; color: black;  font-size: 10pt; background-color: aqua ">{{this.content}}
+                            </p>
+
+                            <small class="author">
+                                {{author.fullName}}
+                            </small>
+                <footer>
+                    <div class="pull-right">
+
+                                    <a class="btn btn-danger btn-xs" href="/article/comment/delete/{{article.id}}">Delete</a>
+
+                                </div>
+                            </footer>
+                        </div>
+                    {{/each}}
 
                 <footer>
                     <div class="pull-right">

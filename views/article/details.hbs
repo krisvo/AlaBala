@@ -24,6 +24,34 @@
                     </div>
                 </footer>
             </article>
+            <div id="comments-container">
+                <div id="comment-form">
+                    <br>
+                    </br>
+                    <form method="post" action="/article/comment/{{article.id}}">
+
+                        <br>
+                        <br>
+                        <textarea id="comment" rows="3" placeholder="Enter comment" name="content" style="width: 1135px; height: 77px"></textarea>
+                        <button type = submit class="btn btn-block btn-xs">Post</button>
+                    </form>
+                    <br/>
+                    <br/>
+                </div>
+                <div id="comments">
+                    {{#each article.comments}}
+                        <blockquote>
+                            <p>{{this.content}}</p>
+                            <footer>Created by <cite>{{this.author.fullName}}</cite></footer>
+                        </blockquote>
+                    <footer>
+                                <div class="pull-right">
+                                        <a class="btn btn-danger btn-xs" href="/article/comment/delete/{{article.id}}">Delete</a>
+                                </div>
+                    </footer>
+                    {{/each}}
+                </div>
+            </div>
         </div>
     </div>
 </div>

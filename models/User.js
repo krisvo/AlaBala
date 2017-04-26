@@ -13,9 +13,10 @@ let userSchema = mongoose.Schema({
     passwordHash: {type: String, required: true},
     fullName: {type: String, required: true},
     articles: [{type: mongoose.Schema.Types.ObjectId, ref: 'Article'}],
+    comments: [{type:mongoose.Schema.Types.ObjectId, ref:'Comment'}],
     roles: [{type: mongoose.Schema.Types.ObjectId, ref: 'Role'}],
     salt: {type: String, required: true},
-    imagePath: {type: String},
+
 });
 
 userSchema.method({

@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 module.exports = (config) =>{
     mongoose.connect(config.connectionString);
 
+
     let database = mongoose.connection;
     database.once('open', (error) =>{
         if (error){
@@ -18,5 +19,6 @@ module.exports = (config) =>{
     require('./../models/Role').initialize();
     require('./../models/User').seedAdmin();
     require('./../models/Article');
+    require('./../models/Comment');
     require('./../models/Tag');
 };

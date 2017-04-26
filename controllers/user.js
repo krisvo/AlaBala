@@ -31,7 +31,7 @@ module.exports = {
             else {
                 let salt = encryption.generateSalt();
                 let passwordHash = encryption.hashPassword(registerArgs.password, salt);
-                let roles =[];
+                let roles = [];
                 Role.findOne({name: 'User'}).then(role => {
                     roles.push(role.id);
 
@@ -40,35 +40,26 @@ module.exports = {
                         passwordHash: passwordHash,
                         fullName: registerArgs.fullName,
                         salt: salt,
-                        roles:roles
+                        roles: roles
                     };
                     User.create(userObject).then(user => {
                         role.users.push(user.id);
                         role.save(err => {
-                            if (err){
+                            if (err) {
                                 registerArgs.error = err.message;
-                                res.render('user/register',registerArgs);
+                                res.render('user/register', registerArgs);
                             }
-                            else{
+                            else {
                                 req.logIn(user, (err) => {
                                     if (err) {
                                         registerArgs.error = err.message;
-                                        res.render('user/register',registerArgs);
+                                        res.render('user/register', registerArgs);
                                         return;
                                     }
                                     res.redirect('/');
                                 })
                             }
                         });
-                        req.logIn(user, (err) => {
-                            if (err) {
-                                registerArgs.error = err.message;
-                                res.render('user/register', registerArgs);
-                                return;
-                            }
-
-                            res.redirect('/')
-                        })
                     })
                 });
             }
@@ -98,8 +89,8 @@ module.exports = {
                     return;
                 }
 
-                let returnUrl ='/';
-                if (req.session.returnUrl){
+                let returnUrl = '/';
+                if (req.session.returnUrl) {
                     returnUrl = req.session.returnUrl;
                     delete req.session.returnUrl;
                 }
@@ -113,15 +104,81 @@ module.exports = {
         res.redirect('/');
     },
 
-    detailsGet: (req,res)=> {
-            res.render('user/details');
-        },
-    detailsPost:(req,res) =>{
-        let image= req.files.image;
-        if (image){
+    detailsGet: (req, res) => {
+        res.render('user/profile');
+    },
+    detailsPost: (req, res) => {
+        let id = req.params.id;
+        let profileArgs = req.body;
+
+        if (!req.isAuthenticated()) {
+            errorMsg = 'You should be logged in to update your profile!';
+        }
+        if (errorMsg) {
+            res.render('article/create', {error: errorMsg});
+            return;
+        }
+        profileArgs.user = req.user.id;
+        Profile.create(articleArgs).then(article => {
+            req.user.articles.push(article.id);
+            req.user.save(err => {
+                if (err) {
+                    res.redirect('/', {error: err.message});
+                }
+                else {
+                    res.redirect('/');
+                }
+            });
+        })
+
+
+        User.findOne({email: registerArgs.email}).then(user => {
+            // console.log(user);
+            let errorMsg = '';
+            if (errorMsg) {
+                registerArgs.error = errorMsg;
+                res.render('user/profile', registerArgs);
+            }
+            else {
+                let salt = encryption.generateSalt();
+                let passwordHash = encryption.hashPassword(registerArgs.password, salt);
+                let roles = [];
+                Role.findOne({name: 'User'}).then(role => {
+                    roles.push(role.id);
+
+                    let userObject = {
+                        email: registerArgs.email,
+                        passwordHash: passwordHash,
+                        fullName: registerArgs.fullName,
+                        salt: salt,
+                        roles: roles
+                    };
+                    User.create(userObject).then(user => {
+                        role.users.push(user.id);
+                        role.save(err => {
+                            if (err) {
+                                registerArgs.error = err.message;
+                                res.render('user/register', registerArgs);
+                            }
+                            else {
+                                req.logIn(user, (err) => {
+                                    if (err) {
+                                        registerArgs.error = err.message;
+                                        res.render('user/register', registerArgs);
+                                        return;
+                                    }
+                                    res.redirect('/');
+                                })
+                            }
+                        });
+                    })
+                });
+            }
+        })
+        if (image) {
             let filename = image.name;
-            image.mv(`./public/images/${filename}`,err =>{
-                if(err){
+            image.mv(`./public/images/${filename}`, err => {
+                if (err) {
                     console.log(err.message);
                 }
             });
@@ -138,8 +195,7 @@ module.exports = {
         detailsArgs.imagePath = `/images/${image.name}`;
 
 
-
-        res.redirect('/')
+        res.redirect('user/details')
     }
 
 };
