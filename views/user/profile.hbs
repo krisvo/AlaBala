@@ -1,28 +1,38 @@
 <div class="container body-content span=8 offset=2">
     <div class="well">
-        <form class="form-horizontal" method="post" action="/user/profile">
+        <form class="form-horizontal" method="get" action="/user/details">
             <fieldset>
                 <legend>Update your profile</legend>
-                <form>
-                    <div class="box">
-                        <img src="{{imagePath}}">
-                    </div>
 
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" for="inputProfilePicture">Profile picture</label>
+                    <div class="col-sm-4 ">
                     <input type="file" class="form-control" enctype="multipart/form-data" id="profilPicture" placeholder="Profile picture" name="profilePicture" >
+                    </div>
+                </div>
 
-                </form>
+
                 <div class="form-group">
                     <label class="col-sm-4 control-label" for="inputAge">Age</label>
                     <div class="col-sm-4 ">
                         <input type="text" class="form-control" id="inputAge" placeholder="Age" name="age">
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="col-sm-4 control-label" for="inputTown">Town</label>
                     <div class="col-sm-4 ">
                         <input type="text" class="form-control" id="inputTown" placeholder="Where you are">
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" for="inputInfo">About me:</label>
+                    <div class="col-sm-4 ">
+                        <input type="text" class="form-control" id="inputInfo" placeholder="Write something about you">
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-4">
                         <button type="reset" class="btn btn-default">Cancel</button>
