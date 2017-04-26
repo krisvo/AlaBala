@@ -57,14 +57,16 @@ module.exports = {
     removeCommentGet: (req, res) => {
         let id = req.params.id;
         Comment.findOneAndRemove({ _id: id }).populate('article').then(comment => {
-
-
             let articleId = comment.article.id;
-
-            res.redirect(`/article/details/${articleId}`);
+            req.user.isInRole('Admin').then(isAdmin => {
+                let isUserAuthorized = isAdmin || req.user.isAuthor(comment);
+                if (!isAdmin && !req.user.isAuthor(comment)) {
+                    res.redirect(`/article/details/${articleId}`);
+                    return;
+                }
+                res.redirect(`/article/details/${articleId}`);
+            });
         });
-
-
     }
 };
 
