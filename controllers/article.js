@@ -3,6 +3,8 @@
  */
 
 const Article = require('mongoose').model('Article');
+const Comment = require('mongoose').model('Comment');
+const User = require('mongoose').model('User');
 
 module.exports = {
     createGet: (req, res) => {
@@ -45,15 +47,16 @@ module.exports = {
     details: (req, res) => {
         let id = req.params.id;
 
-        Article.findById(id).populate('author').populate('comments').then(article => {
-            if (!req.user){
+        Article.findById(id).populate('author')
+            .populate({path: 'comments', model: 'Comment', populate: {path: 'author', model: 'User'}}).then(article => {
+            if (!req.user) {
                 res.render('article/details', {article: article, isUserAuthorized: false});
                 return;
             }
 
             req.user.isInRole('Admin').then(isAdmin => {
                 let isUserAuthorized = isAdmin || req.user.isAuthor(article);
-                res.render ('article/details', {article:article, isUserAuthorized:isUserAuthorized});
+                res.render('article/details', {article: article, isUserAuthorized: isUserAuthorized});
             });
 //            res.render('article/details', article)
         });
@@ -62,8 +65,8 @@ module.exports = {
     editGet: (req, res) => {
         let id = req.params.id;
 
-        if(!req.isAuthenticated()){
-            let returnUrl =`/article/edit/${id}`;
+        if (!req.isAuthenticated()) {
+            let returnUrl = `/article/edit/${id}`;
             req.session.returnUrl = returnUrl;
 
             res.redirect('/user/login');
@@ -71,8 +74,8 @@ module.exports = {
         }
 
         Article.findById(id).then(article => {
-            req.user.isInRole('Admin').then (isAdmin => {
-                if (!isAdmin && !req.user.isAuthor(article)){
+            req.user.isInRole('Admin').then(isAdmin => {
+                if (!isAdmin && !req.user.isAuthor(article)) {
                     res.redirect('/');
                     return;
                 }
@@ -108,7 +111,7 @@ module.exports = {
     deleteGet: (req, res) => {
         let id = req.params.id;
 
-        if(!req.isAuthenticated()){
+        if (!req.isAuthenticated()) {
             let returnUrl = `/article/delete/${id}`;
             req.session.returnUrl = returnUrl;
 
@@ -116,13 +119,13 @@ module.exports = {
             return;
         }
 
-        Article.findById(id).then (article => {
+        Article.findById(id).then(article => {
             req.user.isInRole('Admin').then(isAdmin => {
                 if (!isAdmin && !req.user.isAuthor(article)) {
                     res.redirect('/');
                     return;
                 }
-                res.render ('article/delete', article)
+                res.render('article/delete', article)
             });
 //            res.render ('article/delete', article)
         });
@@ -135,9 +138,9 @@ module.exports = {
                 let author = article.author;
                 let index = author.articles.indexOf(article.id);
 
-                if (index<0){
+                if (index < 0) {
                     let errorMsg = 'Article was not found for that author!';
-                    res.render('article/delete', {error:errorMsg})
+                    res.render('article/delete', {error: errorMsg})
                 }
                 else {
                     let count = 1;
