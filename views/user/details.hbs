@@ -4,9 +4,9 @@
             <h5>Profile picture</h5>
             <form>
                 <div class="box">
-                    <img scr="{{imagePath}}"></img>
+                    <img src="{{imagePath}}">
                 </div>
-                </br>
+
                 <input type="file" class="form-control" enctype="multipart/form-data" id="profilPicture" placeholder="Profile picture" name="profilePicture" >
 
             </form>
@@ -17,17 +17,26 @@
             <p> E-mail:{{user.email}}</p>
         </div>
         <div class="col-md-4">
-            <p>Select your theme:
+            <p>Select your theme: </p>
             <div class="col-md-8">
             <div class="boxTheme"></div>
             <div class="boxTheme"></div>
             <div class="boxTheme"></div>
             <div class="boxTheme"></div>
-            </div>
-            </p>
         </div>
+
+
         <div class="col-md-12">
             <h4> Your articles</h4>
+
+            <blockquote>
+                <header>
+                    <h2>{{article.title}}</h2>
+                </header>
+                <p>{{article.content}}</p>
+                <footer>Created on <cite title="Source Title">{{article.date}}</cite></footer>
+            </blockquote>
+
             <article>
                 <header>
                     <h2>{{article.title}}</h2>
@@ -36,6 +45,17 @@
                 <p>
                     {{article.content}}
                 </p>
+
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle" id="tagDrop" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Tag <span class="caret"></span> </a>
+                <ul class="dropdown-menu" aria-labelledby="tagDrop">
+                    <li> Tag 1</li>
+                    <li> Tag 2</li>
+                    <li> Tag 3</li>
+                    <li> Tag 4</li>
+                    <li> Tag 5</li>
+                </ul>
+                </div>
 
                 <footer>
                     <div class="pull-right">
