@@ -33,7 +33,8 @@
                         <br>
                         <br>
                         <textarea id="comment" rows="3" placeholder="Enter comment" name="content" style="width: 1135px; height: 77px"></textarea>
-                        <button type = submit; class="btn btn-block btn-xs">Post</button>
+                        <button type = submit class="btn btn-block btn-xs">Post</button>
+
                     </form>
                     <br/>
                     <br/>
@@ -45,12 +46,11 @@
                             </p>
 
                             <small class="author">
-                                {{author.fullName}}
+                                {{this.author.fullName}}
                             </small>
                             <footer>
                                 <div class="pull-right">
-
-                                        <a class="btn btn-danger btn-xs" href="/article/comment/delete/{{article.id}}">Delete</a>
+                                        <a class="btn btn-danger btn-xs" href="/article/comment/delete/{{this.id}}">Delete</a>
 
                                 </div>
                             </footer>
