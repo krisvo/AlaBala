@@ -60,15 +60,6 @@ module.exports = {
                                 })
                             }
                         });
-                        req.logIn(user, (err) => {
-                            if (err) {
-                                registerArgs.error = err.message;
-                                res.render('user/register', registerArgs);
-                                return;
-                            }
-
-                            res.redirect('/')
-                        })
                     })
                 });
             }
