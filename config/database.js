@@ -20,5 +20,4 @@ module.exports = (config) =>{
     require('./../models/User').seedAdmin();
     require('./../models/Article');
     require('./../models/Comment');
-    require('./../models/Profile');
 };
