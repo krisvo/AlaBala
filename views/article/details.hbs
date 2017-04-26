@@ -34,27 +34,21 @@
                         <br>
                         <textarea id="comment" rows="3" placeholder="Enter comment" name="content" style="width: 1135px; height: 77px"></textarea>
                         <button type = submit class="btn btn-block btn-xs">Post</button>
-
                     </form>
                     <br/>
                     <br/>
                 </div>
                 <div id="comments">
                     {{#each article.comments}}
-                        <div class="col-md-12">
-                            <p style = "text-align: start; color: black;  font-size: 10pt; background-color: aqua ">{{this.content}}
-                            </p>
-
-                            <small class="author">
-                                {{this.author.fullName}}
-                            </small>
-                            <footer>
+                        <blockquote>
+                            <p>{{this.content}}</p>
+                            <footer>Created by <cite>{{this.author.fullName}}</cite></footer>
+                        </blockquote>
+                    <footer>
                                 <div class="pull-right">
-                                        <a class="btn btn-danger btn-xs" href="/article/comment/delete/{{this.id}}">Delete</a>
-
+                                        <a class="btn btn-danger btn-xs" href="/article/comment/delete/{{article.id}}">Delete</a>
                                 </div>
-                            </footer>
-                        </div>
+                    </footer>
                     {{/each}}
                 </div>
             </div>

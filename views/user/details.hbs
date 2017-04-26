@@ -1,6 +1,6 @@
-<div class="container body-content">
-    <div class="row">
-        <div class="col-md-4">
+<div class="container body-content span=8 offset=2">
+    <div class="well">
+        <div class="col-md-1" style="width: 150px; height: 150px; border: 0.1px solid black">
             <h5>Profile picture</h5>
             <form>
                 <div class="box">
@@ -29,6 +29,8 @@
         <div class="col-md-12">
             <h4> Your articles</h4>
 
+        {{#each article.comments}}
+
             <blockquote>
                 <header>
                     <h2>{{article.title}}</h2>
@@ -45,17 +47,26 @@
                 <p>
                     {{article.content}}
                 </p>
+        {{/each}}
 
-                <div class="dropdown">
-                    <a href="#" class="dropdown-toggle" id="tagDrop" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Tag <span class="caret"></span> </a>
-                <ul class="dropdown-menu" aria-labelledby="tagDrop">
-                    <li> Tag 1</li>
-                    <li> Tag 2</li>
-                    <li> Tag 3</li>
-                    <li> Tag 4</li>
-                    <li> Tag 5</li>
-                </ul>
-                </div>
+                <div id="comments">
+                    {{#each article.comments}}
+                        <div class="col-md-12">
+                            <p style = "text-align: start; color: black;  font-size: 10pt; background-color: aqua ">{{this.content}}
+                            </p>
+
+                            <small class="author">
+                                {{author.fullName}}
+                            </small>
+                            <footer>
+                                <div class="pull-right">
+
+                                    <a class="btn btn-danger btn-xs" href="/article/comment/delete/{{article.id}}">Delete</a>
+
+                                </div>
+                            </footer>
+                        </div>
+                    {{/each}}
 
                 <footer>
                     <div class="pull-right">
