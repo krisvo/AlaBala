@@ -34,5 +34,5 @@ module.exports = (app) => {
     app.post('/article/delete/:id', articleController.deletePost);
 
     app.post('/article/comment/:id', commentController.commentPost);
-
+    app.get('/article/comment/delete/:id', commentController.removeCommentGet)
 };

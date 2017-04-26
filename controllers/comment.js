@@ -1,3 +1,4 @@
+
 const Comment = require('mongoose').model('Comment');
 const Article = require('mongoose').model('Article');
 
@@ -53,28 +54,17 @@ module.exports = {
     },
 
 
-    removePost: (req, res) => {
+    removeCommentGet: (req, res) => {
         let id = req.params.id;
-        Comment.findOneAndRemove({_id: id}).populate('author')
-            .then(comment => {
-                let author = comment.author;
-                //let com = article.comments;
-                let index = author.comments.indexOf(comment.id);
+        Comment.findOneAndRemove({ _id: id }).populate('article').then(comment => {
 
 
-                if (index<0){
-                    //let errorMsg = 'Article was not found for that author!';
-                    res.render('article/details', {error:errorMsg})
-                }
-                else {
-                    let count = 1;
-                    // Comment.findByIdAndRemove(article.id(id)).remove(com);
-                    author.comments.splice(index, count);
-                    author.save().then((user) => {
-                        res.redirect('/');
-                    });
-                }
-            })
+            let articleId = comment.article.id;
+
+            res.redirect(`/article/details/${articleId}`);
+        });
+
+
     }
 };
 
