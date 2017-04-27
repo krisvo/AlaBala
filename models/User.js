@@ -25,7 +25,6 @@ userSchema.method({
         let isSamePasswordHash = inputPasswordHash === this.passwordHash;
         return isSamePasswordHash;
     },
-
     isAuthor: function (article) {
         if (!article){
             return false;

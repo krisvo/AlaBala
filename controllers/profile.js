@@ -1,9 +1,10 @@
 /**
  * Created by 450 G4 on 4/26/2017.
  */
+const User = require('mongoose').model('User');
 const Article = require('mongoose').model('Article');
 const Comment = require('mongoose').model('Comment');
-const User = require('mongoose').model('User');
+const Profile = require('mongoose').model('Profile');
 
 
 module.exports= {
@@ -30,7 +31,6 @@ module.exports= {
             errorMsg = 'You should be logged in to update your profile!';
         }
 
-
         else {
             let profilePicture = req.files.image;
 
@@ -42,6 +42,7 @@ module.exports= {
                     }
                 });
                 profileArgs.profilePicture = `/images/${profilePicture.name}`;
+
                 profileArgs.person = req.user.fullName;
 
                 let profileObject = {
@@ -49,7 +50,7 @@ module.exports= {
                     profilePicture: profileArgs.profilePicture,
                     age: profileArgs.age,
                     town: profileArgs.town,
-                    about: profileArgs.about
+                    about: profileArgs.about,
                 };
 
                 Profile.create(profileObject).then(profile => {
@@ -59,11 +60,11 @@ module.exports= {
                             res.redirect('/', {error: err.message});
                         }
                         else {
-                            res.redirect('user/details');
+                            return(res.redirect('/'));
                         }
                     });
 
-                    res.redirect('user/details')
+                    return(res.redirect('user/details'));
                 })
             }
         }

@@ -5,6 +5,7 @@
 const Article = require('mongoose').model('Article');
 const Comment = require('mongoose').model('Comment');
 const User = require('mongoose').model('User');
+const Profile = require('mongoose').model('Profile');
 
 module.exports = {
     createGet: (req, res) => {

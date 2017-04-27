@@ -26,10 +26,11 @@
 
             <h4> My articles</h4>
         {{#each user.articles }}
+            {{article.id}}
 
             <blockquote>
                 <header>
-                    <h2>{{this.title}}</h2>
+                    <h2>{{article.title}}</h2>
                 </header>
                 <p>{{this.content}}</p>
                 <footer>Created on <cite title="Source Title">{{this.date}}</cite></footer>
@@ -42,7 +43,7 @@
             {{#each user.comments}}
 
                 <blockquote>
-                    <p>{{this.comments}}</p>
+                    <p>{{comment}}</p>
                     <footer>Posted on <cite title="Source Title">{{this.title}}</cite></footer>
                 </blockquote>
 

@@ -1,6 +1,7 @@
 
 const Comment = require('mongoose').model('Comment');
 const Article = require('mongoose').model('Article');
+const Profile = require('mongoose').model('Profile');
 
 
 
@@ -63,7 +64,7 @@ module.exports = {
                     res.redirect(`/article/details/${articleId}`);
                     return;
                 }
-                res.redirect(`/article/details/${articleId}`);
+                res.redirect(`/article/details/${{articleId}}`);
             });
         });
     }
