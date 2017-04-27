@@ -5,6 +5,7 @@ const userController = require('./../controllers/user');
 const homeController = require('./../controllers/home');
 const articleController = require('./../controllers/article');
 const commentController = require('./../controllers/comment');
+const profileController = require('./../controllers/profile');
 
 module.exports = (app) => {
     app.get('/', homeController.index);
@@ -15,12 +16,7 @@ module.exports = (app) => {
     app.get('/user/login', userController.loginGet);
     app.post('/user/login', userController.loginPost);
 
-    app.get('/user/profile',userController.detailsGet);
-    app.post('/user/profile',userController.detailsPost);
-
     app.get('/user/logout', userController.logout);
-
-
 
     app.get('/article/create', articleController.createGet);
     app.post('/article/create', articleController.createPost);
@@ -34,5 +30,11 @@ module.exports = (app) => {
     app.post('/article/delete/:id', articleController.deletePost);
 
     app.post('/article/comment/:id', commentController.commentPost);
-    app.get('/article/comment/delete/:id', commentController.removeCommentGet)
+    app.get('/article/comment/delete/:id', commentController.removeCommentGet);
+
+    app.get('/user/profile',profileController.profileGet);
+    app.post('/user/details/',profileController.profilePost);
+
+    app.get('/user/details',profileController.detailsGet);
+    app.post('/user/details/',profileController.profilePost);
 };
