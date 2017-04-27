@@ -8,7 +8,6 @@ let articleSchema = mongoose.Schema({
     author: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
     comments: [{type:mongoose.Schema.Types.ObjectId, ref:'Comment'}],
     date: {type:Date, default: Date.now()},
-    imagePath: {type: String},
 });
 
 const Article = mongoose.model ('Article',articleSchema);

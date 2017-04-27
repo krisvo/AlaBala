@@ -36,7 +36,6 @@ module.exports = {
                     req.user.save(err => {
                         if (err) {
                             res.redirect('/', {error: err.message});
-                            return;
                         }
                     });
 
