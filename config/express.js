@@ -34,7 +34,7 @@ module.exports = (app, config) => {
     app.use(express.static(path.join(config.rootFolder, 'public')));
 
 
-    //use express-fileupload to handel
+    //use express-fileupload to handel multipart from date
     app.use(fileUpload());
 
 
