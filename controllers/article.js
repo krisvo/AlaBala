@@ -5,8 +5,6 @@
 const Article = require('mongoose').model('Article');
 const Comment = require('mongoose').model('Comment');
 const User = require('mongoose').model('User');
-const Tag = require('mongoose').model('Tag');
-const initializeTags = require('./../models/Tag');
 
 module.exports = {
     createGet: (req, res) => {
@@ -49,15 +47,17 @@ module.exports = {
 
         articleArgs.imagePath = `/images/${image.name}`;
 
-        articleArgs.tags = [];
         Article.create(articleArgs).then(article => {
-            let tagNames = articleArgs.tagNames.split(/\s+|,/).filter(tag => {return tag});
-            initializeTags(tagNames, artile.id);
-
-            article.prepareInsert();
-            res.redirect('/');
-        });
-
+            req.user.articles.push(article.id);
+            req.user.save(err => {
+                if (err) {
+                    res.redirect('/', {error: err.message});
+                }
+                else {
+                    res.redirect('/');
+                }
+            });
+        })
     },
 
     details: (req, res) => {
@@ -89,13 +89,13 @@ module.exports = {
             return;
         }
 
-        Article.findById(id).populate('tags').then(article => {
+        Article.findById(id).then(article => {
             req.user.isInRole('Admin').then(isAdmin => {
                 if (!isAdmin && !req.user.isAuthor(article)) {
                     res.redirect('/');
                     return;
                 }
-                article.tagNames = article.tags.map(tag => {return tag.name});
+
                 res.render('article/edit', article);
             });
         });
@@ -122,30 +122,6 @@ module.exports = {
                     res.redirect(`/article/details/${id}`);
                 })
         }
-
-        Article.findById(id).populate('category tags').then(article => {
-            if (article.category.id !==articleArgs.category){
-                article.category.articles.remove(article.id);
-                article.category.save();
-            }
-
-            article.category = articleArgs.category;
-            article.title = articleArgs.title;
-            article.content = articleArgs.content;
-
-            let newTagNames = articleArgs.tags.split(/\s+|,/).filter(tag => {return tag});
-
-            let oldTags = article.tags.filter(tag => {
-                return newTagNames.indexOf(tag.name) === -1;
-            });
-
-            for (let tag of oldTags){
-                tag.deleteArticle(article.id);
-                article.deleteTag(tag.id);
-            }
-
-            initializeTags(newTagNames, article.id);
-        })
     },
 
     deleteGet: (req, res) => {
@@ -159,16 +135,15 @@ module.exports = {
             return;
         }
 
-        Article.findById(id).populate('category tags').then(article => {
+        Article.findById(id).then(article => {
             req.user.isInRole('Admin').then(isAdmin => {
                 if (!isAdmin && !req.user.isAuthor(article)) {
                     res.redirect('/');
                     return;
                 }
-
-                article.tagNames = article.tags.map(tag => {return tag.name});
                 res.render('article/delete', article)
             });
+//            res.render ('article/delete', article)
         });
     },
 
