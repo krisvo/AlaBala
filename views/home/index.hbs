@@ -1,28 +1,13 @@
 <div class="container body-content">
     <div class="row">
-        {{#each articles}}
-
-        <div class="col-md-12">
-            <div class="post-preview">
-                <a href="/article/details/{{this.id}}">
-                    <h2 class="post-title">
-                        {{this.title}}
+        {{#each categories}}
+            <div class="col-md-6">
+                <header>
+                    <h2>
+                        <a href="/category/{{ this.id }}">{{ this.name }} ({{ this.articles.length }})</a>
                     </h2>
-                    <h3 class="post-subtitle">
-                        {{this.content}}
-                    </h3>
-                </a>
-                <p class="post-meta">Posted by {{this.author.fullName}} on {{this.date}}</p>
-
-                <footer>
-                    <div >
-                        <a class="btn btn-default btn-xs" href="/article/details/{{this.id}}">Read more &raquo;</a>
-                    </div>
-                </footer>
+                </header>
             </div>
-        </div>
-
-
         {{/each}}
     </div>
 </div>

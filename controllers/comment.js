@@ -1,4 +1,3 @@
-
 const Comment = require('mongoose').model('Comment');
 const Article = require('mongoose').model('Article');
 
@@ -43,7 +42,8 @@ module.exports = {
                     article.comments.push(comment.id);
                     article.save(err => {
                         if (err) {
-                            res.redirect('/', {error: err.message});
+                            res.redirect('/');
+                            console.log('Unable to save comment!')
                             return;
                         }
                         res.redirect(`/article/details/${req.params.id}`);
@@ -67,4 +67,3 @@ module.exports = {
 
     }
 };
-

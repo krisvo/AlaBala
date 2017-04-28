@@ -43,23 +43,17 @@ module.exports = {
                         roles: roles
                     };
                     User.create(userObject).then(user => {
-                        role.users.push(user.id);
-                        role.save(err => {
+                        user.prepareInsert();
+                        req.logIn(user, (err) => {
                             if (err) {
                                 registerArgs.error = err.message;
                                 res.render('user/register', registerArgs);
+                                return;
                             }
-                            else {
-                                req.logIn(user, (err) => {
-                                    if (err) {
-                                        registerArgs.error = err.message;
-                                        res.render('user/register', registerArgs);
-                                        return;
-                                    }
-                                    res.redirect('/');
-                                })
-                            }
-                        });
+
+                            res.redirect('/');
+                        })
+
                     })
                 });
             }
@@ -107,6 +101,7 @@ module.exports = {
     detailsGet: (req, res) => {
         res.render('user/profile');
     },
+
     detailsPost: (req, res) => {
         let id = req.params.id;
         let profileArgs = req.body;

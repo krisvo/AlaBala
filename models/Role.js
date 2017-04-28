@@ -1,9 +1,4 @@
-/**
- * Created by 450 G4 on 3/29/2017.
- */
-
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Schema.Types.ObjectId;
 
 let roleSchema = mongoose.Schema({
     name: {type: String,require: true, unique:true},

@@ -1,10 +1,5 @@
-/**
- * Created by 450 G4 on 3/27/2017.
- */
-
 const mongoose = require('mongoose');
 const Role = require('mongoose').model('Role');
-const ObjectId = mongoose.Schema.Types.ObjectId;
 const encryption = require('./../utilities/encryption');
 
 
@@ -23,6 +18,7 @@ userSchema.method({
     authenticate: function (password) {
         let inputPasswordHash = encryption.hashPassword(password, this.salt);
         let isSamePasswordHash = inputPasswordHash === this.passwordHash;
+
         return isSamePasswordHash;
     },
 
@@ -35,6 +31,7 @@ userSchema.method({
 
         return isAuthor;
     },
+    
     isInRole: function (roleName) {
         return Role.findOne({name:roleName}).then (role => {
             if (!role){
@@ -44,9 +41,36 @@ userSchema.method({
             let isInRole = this.roles.indexOf(role.id) !== -1;
             return isInRole;
         })
+    },
+
+    prepareDelete: function() {
+        for (let role of this.roles){
+            Role.findById(role).then(role => {
+                role.users.remove(this.id);
+                role.save();
+            })
+        }
+
+        let Article = mongoose.model('Article');
+        for (let article of this.articles){
+            Article.findById(article).then(article => {
+                article.prepareDelete();
+                article.remove();
+            })
+        }
+    },
+
+    prepareInsert: function () {
+        for (let role of this.roles) {
+            Role.findById(role).then(role => {
+                role.users.push(this.id);
+                role.save();
+            });
+        }
     }
 });
 
+userSchema.set('versionKey', false);
 
 const User = mongoose.model('User', userSchema);
 
@@ -59,10 +83,11 @@ module.exports.seedAdmin = () => {
             Role.findOne({name:'Admin'}).then( role => {
                 let salt = encryption.generateSalt();
                 let passwordHash = encryption.hashPassword('admin',salt);
+
                 let roles = [];
                 roles.push(role.id);
 
-                let user ={
+                let user = {
                     email: email,
                     passwordHash:passwordHash,
                     fullName: 'Admin',
