@@ -32,9 +32,7 @@ module.exports = (app) => {
     app.post('/article/comment/:id', commentController.commentPost);
     app.get('/article/comment/delete/:id', commentController.removeCommentGet);
 
-    app.get('/user/profile',profileController.profileGet);
-    app.post('/user/details/',profileController.profilePost);
-
     app.get('/user/details',profileController.detailsGet);
-    app.post('/user/details/',profileController.profilePost);
+    app.post('/user/details/',profileController.detailsPost);
+
 };

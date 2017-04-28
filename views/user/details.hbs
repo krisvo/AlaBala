@@ -2,23 +2,16 @@
 
         <form class="form-horizontal" method="post" action="/user/details">
         <form class="form-horizontal">
-        <div class="col-md-6" style="width: 150px; height: 150px; border: 0.1px solid black">
-            <form>
-                    <img src="{{imagePath}}">
-            </form>
-        </div>
-
         <div class="col-md-6">
-            <p> Name: {{user.fullName}}</p>
-            <p> Age: {{profile.age}}</p>
-            <p> Town: {{profile.town}}</p>
-            <p> About me:
+
+            <p> User profile</p>
             <blockquote>
-                 {{profile.about}}
+                <p> Name: {{user.fullName}}</p>
+                <p> Contact me: {{user.email}}</p>
             </blockquote>
 
-            <p> Contact me: {{user.email}}</p>
         </div>
+
         </form>
         </form>
 
@@ -26,7 +19,6 @@
 
             <h4> My articles</h4>
         {{#each user.articles }}
-            {{article.id}}
 
             <blockquote>
                 <header>
@@ -49,11 +41,5 @@
 
             {{/each}}
 
-
-            <footer>
-                    <div class="pull-right">
-                        <a class="btn btn-default btn-xs" href="profile">Update profile &raquo;</a>
-                    </div>
-                </footer>
         </div>
 </div>

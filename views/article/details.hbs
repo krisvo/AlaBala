@@ -9,6 +9,11 @@
                 <p>
                     {{article.content}}
                 </p>
+                <p>
+                    {{#if article.imagePath}}
+                        <img src="{{article.imagePath}}" width="400" alt="Article Image">
+                    {{/if}}
+                </p>
 
                 <small class="author">
                     {{article.author.fullName}}
@@ -27,7 +32,7 @@
             <div id="comments-container">
                 <div id="comment-form">
                     <br>
-                    </br>
+
                     <form method="post" action="/article/comment/{{article.id}}">
 
                         <br>

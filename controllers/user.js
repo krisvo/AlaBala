@@ -4,8 +4,6 @@
 const encryption = require('./../utilities/encryption');
 const User = require('mongoose').model('User');
 const Role = require('mongoose').model('Role');
-const Profile = require('mongoose').model('Profile');
-
 
 module.exports = {
     registerGet: (req, res) => {
@@ -33,9 +31,10 @@ module.exports = {
                 let salt = encryption.generateSalt();
                 let passwordHash = encryption.hashPassword(registerArgs.password, salt);
                 let roles = [];
+                }
+
                 Role.findOne({name: 'User'}).then(role => {
                     roles.push(role.id);
-
                     let userObject = {
                         email: registerArgs.email,
                         passwordHash: passwordHash,
@@ -63,9 +62,8 @@ module.exports = {
                         });
                     })
                 });
-            }
-        })
-    },
+            });
+        },
 
     loginGet: (req, res) => {
         res.render('user/login');
