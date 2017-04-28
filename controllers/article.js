@@ -41,6 +41,28 @@ module.exports = {
             return;
         }
 
+        let image = req.files.image;
+
+        if (image) {
+            let filenameAndExtension = image.name;
+
+            let filenameExtensionSeparatorIndex = filenameAndExtension.lastIndexOf(".");
+            let filename = filenameAndExtension.substring(0, filenameExtensionSeparatorIndex);
+            let extension = filenameAndExtension.substring(filenameExtensionSeparatorIndex + 1);
+
+            let randomChars = require('./../utilities/encryption').generateSalt().substring(0, 5).replace(/\//g, 'x');
+
+            let finalFilename = `${filename}_${randomChars}.${extension}`;
+
+            image.mv(`./public/images/${finalFilename}`, err=> {
+                if (err){
+                    console.log(err.message);
+                }
+
+            });
+            articleArgs.imagePath = `/images/${finalFilename}`;
+        }
+
         articleArgs.author = req.user.id;
         Article.create(articleArgs).then(article => {
             article.prepareInsert();

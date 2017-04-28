@@ -21,5 +21,6 @@ module.exports = (config) =>{
     require('./../models/Article');
     require('./../models/Category');
     require('./../models/Comment');
-    require('./../models/Tag')
+    require('./../models/Tag');
+    require('./../models/Profile')
 };
